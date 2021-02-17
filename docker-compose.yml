@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+  gnc_server:
+    build: .
+    volumes:
+      - type: bind
+        source: .
+        target: /app
+    container_name: eoss_search
+    tty: true
