@@ -5,6 +5,7 @@ package eoss.search;
 
 import eoss.model.Design;
 import eoss.model.DesignSpace;
+import eoss.moea.EOSS_GA;
 
 import java.util.ArrayList;
 
@@ -21,8 +22,24 @@ public class App {
         instruments.add("CMIS");
 
         DesignSpace design_space = new DesignSpace(instruments);
-        Design design = new Design(design_space);
-        design.print();
+        design_space.enumerate_design_space();
+        // design_space.print_design_space();
+
+
+        int num_evaluations = 0;
+        int initial_pop_size = 20;
+        double mutation_prob = 0.2;
+        int run_number = 0;
+
+
+        EOSS_GA algorithm = new EOSS_GA(design_space, num_evaluations, initial_pop_size, mutation_prob, run_number);
+        algorithm.print_solutions();
+
+
+
+
+//        Design design = new Design(design_space);
+//        design.print();
 
 
 

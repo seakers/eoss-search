@@ -1,15 +1,15 @@
 package eoss.model;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Random;
+import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
+
+import java.util.*;
 
 public class Design {
 
     public DesignSpace design_space;
     public Random rand;
 
-
+    public String ID;
     public ArrayList<ArrayList<String>> satellites;
 
     public int num_instruments;
@@ -24,14 +24,23 @@ public class Design {
     // CROSSOVER OPERATOR
     public Design(Design papa, Design mama){
         this.rand = new Random();
+        this.ID = UUID.randomUUID().toString();
 
 
 
     }
 
 
+
+    public void mutate(){
+
+    }
+
+
+
     // COPY CONSTRUCTOR
     public Design(Design design){
+        this.ID = UUID.randomUUID().toString();
         this.design_space = design.design_space;
         this.rand = new Random();
         this.satellites = design.satellites;
@@ -42,10 +51,24 @@ public class Design {
 
     // RANDOM DESIGN
     public Design(DesignSpace design_space){
+        this.ID = UUID.randomUUID().toString();
         this.rand = new Random();
         this.design_space = design_space;
         this.random_design();
     }
+
+    // PRE-CONSTRUCTED DESIGN
+    public Design(DesignSpace design_space, ArrayList<ArrayList<String>> satellites, int num_instruments){
+        this.ID = UUID.randomUUID().toString();
+        this.design_space = design_space;
+        this.satellites = satellites;
+        this.num_instruments = num_instruments;
+        this.num_satellites = satellites.size();
+    }
+
+
+
+
 
     public void random_design(){
         this.satellites = new ArrayList<>();
@@ -116,4 +139,52 @@ public class Design {
             System.out.println("--> SATELLITE " + x + ": " + satellites.get(x));
         }
     }
+
+
+
+
+
+    public String get_design_string(){
+        String design_str = "";
+
+
+
+
+        return design_str;
+    }
+
+
+
+    public Map<String, MessageAttributeValue> getEvalMessageAttributes(String eval_queue_url){
+        final Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
+        messageAttributes.put("msgType",
+                MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue("add")
+                        .build()
+        );
+        messageAttributes.put("input",
+                MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(this.get_design_string())
+                        .build()
+        );
+        messageAttributes.put("rQueue",
+                MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(eval_queue_url)
+                        .build()
+        );
+        messageAttributes.put("UUID",
+                MessageAttributeValue.builder()
+                        .dataType("String")
+                        .stringValue(this.ID)
+                        .build()
+        );
+
+        return messageAttributes;
+    }
+
+
+
 }

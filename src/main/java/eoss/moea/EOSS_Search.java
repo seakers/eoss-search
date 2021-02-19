@@ -25,8 +25,8 @@ public class EOSS_Search  implements Callable<Algorithm> {
         this.accumulator = new Accumulator();
         this.analyzer = new Analyzer()
                 .withProblem(this.alg.getProblem())
-                .withIdealPoint(-10.1, -0.1)
-                .withReferencePoint(0, 100)
+                .withIdealPoint(-1.1, -0.1)
+                .withReferencePoint(0, 10000)
                 .includeHypervolume()
                 .includeAdditiveEpsilonIndicator();
         this.max_evaluations = max_evaluations;
@@ -40,7 +40,7 @@ public class EOSS_Search  implements Callable<Algorithm> {
     @Override
     public Algorithm call(){
 
-        System.out.println("---------- GNC ALGORITHM BEGIN ----------");
+        System.out.println("---------- EOSS ALGORITHM BEGIN ----------");
 
         alg.step();
 
@@ -92,16 +92,6 @@ public class EOSS_Search  implements Callable<Algorithm> {
 
         return this.alg;
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
