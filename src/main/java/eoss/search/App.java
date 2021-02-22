@@ -3,6 +3,7 @@
  */
 package eoss.search;
 
+import eoss.aws.SqsWrapper;
 import eoss.model.Design;
 import eoss.model.DesignSpace;
 import eoss.moea.EOSS_GA;
@@ -14,6 +15,12 @@ public class App {
     public static void main(String[] args) {
 
 
+        // ----- SQS FUNCTIONALITY
+        String return_queue = "eoss_search_queue";
+        String return_queue_url = SqsWrapper.createQueue(return_queue);
+        SqsWrapper.purgeQueue(return_queue_url);
+
+
         ArrayList<String> instruments = new ArrayList<>();
         instruments.add("VIIRS");
         instruments.add("BIOMASS");
@@ -23,7 +30,7 @@ public class App {
 
         DesignSpace design_space = new DesignSpace(instruments);
         design_space.enumerate_design_space();
-        // design_space.print_design_space();
+        design_space.print_design_space_size();
 
 
         int num_evaluations = 0;
@@ -32,8 +39,10 @@ public class App {
         int run_number = 0;
 
 
-        EOSS_GA algorithm = new EOSS_GA(design_space, num_evaluations, initial_pop_size, mutation_prob, run_number);
+        EOSS_GA algorithm = new EOSS_GA(design_space, num_evaluations, initial_pop_size, mutation_prob, run_number, return_queue_url);
         algorithm.print_solutions();
+
+        algorithm.run();
 
 
 

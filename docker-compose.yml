@@ -7,4 +7,11 @@ services:
         source: .
         target: /app
     container_name: eoss_search
+    environment:
+      - AWS_ACCESS_KEY_ID=AKIAJVM34C5MCCWRJCCQ
+      - AWS_SECRET_ACCESS_KEY=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
     tty: true
+networks:
+  default:
+    external:
+      name: daphne_default

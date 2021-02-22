@@ -24,7 +24,7 @@ public class EOSS_GA implements Runnable{
 
     public int initial_pop_size;
 
-    public EOSS_GA(DesignSpace design_space, int num_evaluations, int initial_pop_size, double mutation_probability, int run_number){
+    public EOSS_GA(DesignSpace design_space, int num_evaluations, int initial_pop_size, double mutation_probability, int run_number, String return_queue_url){
         this.num_evaluations = num_evaluations;
         this.initial_pop_size = initial_pop_size;
         this.mutation_probability = mutation_probability;
@@ -33,7 +33,7 @@ public class EOSS_GA implements Runnable{
         this.solutions = new ArrayList<>(initial_pop_size);
 
         // CREATE PROBLEM
-        this.problem = new EOSS_Problem(this.design_space, run_number);
+        this.problem = new EOSS_Problem(this.design_space, run_number, return_queue_url);
 
         // INITIAL SOLUTIONS
         for(int x = 0; x < initial_pop_size; x++){

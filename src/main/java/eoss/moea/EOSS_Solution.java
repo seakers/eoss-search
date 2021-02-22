@@ -14,7 +14,7 @@ public class EOSS_Solution extends Solution {
 
 
     public EOSS_Solution(DesignSpace design_space, Design design){
-        super(1, 2, 0);
+        super(1, 3, 0);
         this.design = design;
         this.design_space = design_space;
         this.already_evaluated = false;
@@ -25,7 +25,7 @@ public class EOSS_Solution extends Solution {
     }
 
     public EOSS_Solution(DesignSpace design_space){
-        super(1, 2, 0);
+        super(1, 3, 0);
         this.design = new Design(design_space);
         this.already_evaluated = false;
 

@@ -1,5 +1,9 @@
 package eoss.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import software.amazon.awssdk.services.sqs.model.MessageAttributeValue;
 
 import java.util.*;
@@ -145,17 +149,33 @@ public class Design {
 
 
     public String get_design_string(){
-        String design_str = "";
+        JsonArray desing_root = new JsonArray();
+        for(ArrayList<String> satellite: this.satellites){
+            JsonObject sat = new JsonObject();
+            JsonArray sat_insts = new JsonArray();
+            for(String inst: satellite){
+                JsonObject sat_inst = new JsonObject();
+                sat_inst.addProperty("name", inst);
+                sat_insts.add(sat_inst);
+            }
+            sat.add("elements", sat_insts);
+            desing_root.add(sat);
+        }
 
+        return (new GsonBuilder().setPrettyPrinting().create()).toJson(desing_root);
+    }
 
-
-
-        return design_str;
+    public void print_design_string(){
+        System.out.println("\n---------- DESIGN ----------");
+        System.out.println(this.get_design_string());
     }
 
 
 
+
+
     public Map<String, MessageAttributeValue> getEvalMessageAttributes(String eval_queue_url){
+
         final Map<String, MessageAttributeValue> messageAttributes = new HashMap<>();
         messageAttributes.put("msgType",
                 MessageAttributeValue.builder()

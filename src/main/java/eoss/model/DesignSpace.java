@@ -98,8 +98,13 @@ public class DesignSpace {
         for(Design design: this.designs){
             design.print();
         }
+        this.print_design_space_size();
+    }
+
+    public void print_design_space_size(){
         System.out.println("\n----- TOTAL NUMBER OF DESIGNS: " + this.designs.size());
     }
+
 
 
 
