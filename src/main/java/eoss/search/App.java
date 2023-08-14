@@ -8,47 +8,62 @@ import eoss.model.Design;
 import eoss.model.DesignSpace;
 import eoss.moea.EOSS_GA;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class App {
 
     public static void main(String[] args) {
 
 
-        // ----- SQS FUNCTIONALITY
-        String return_queue = "eoss_search_queue";
-        String return_queue_url = SqsWrapper.createQueue(return_queue);
-        SqsWrapper.purgeQueue(return_queue_url);
+        int number_runs = 30;
+        for(int run = 0; run < number_runs; run++){
+
+            // ----- SQS FUNCTIONALITY
+            // String return_queue = "eoss_search_queue";
+            String return_queue = App.getSaltString(15);
+            String return_queue_url = SqsWrapper.createQueue(return_queue);
+            SqsWrapper.purgeQueue(return_queue_url);
+
+            ArrayList<String> instruments = new ArrayList<>();
+            instruments.add("VIIRS");
+            instruments.add("BIOMASS");
+            instruments.add("SMAP_MWR");
+            instruments.add("SMAP_RAD");
+            instruments.add("CMIS");
+
+            DesignSpace design_space = new DesignSpace(instruments);
+            design_space.enumerate_design_space();
+            design_space.print_design_space_size();
 
 
-        ArrayList<String> instruments = new ArrayList<>();
-        instruments.add("VIIRS");
-        instruments.add("BIOMASS");
-        instruments.add("SMAP_MWR");
-        instruments.add("SMAP_RAD");
-        instruments.add("CMIS");
-
-        DesignSpace design_space = new DesignSpace(instruments);
-        design_space.enumerate_design_space();
-        design_space.print_design_space_size();
+            int num_evaluations = 1000;
+            int initial_pop_size = 30;
+            double mutation_prob = 0.3;
 
 
-        int num_evaluations = 0;
-        int initial_pop_size = 20;
-        double mutation_prob = 0.2;
-        int run_number = 0;
+            EOSS_GA algorithm = new EOSS_GA(design_space, num_evaluations, initial_pop_size, mutation_prob, run, return_queue_url);
+            algorithm.print_solutions();
+
+            algorithm.run();
+
+//            String file_path = "/app/results/crossover/run_" + run + ".csv";
+//            try{
+//                File f = new File(file_path);
+//                if(!f.exists()){
+//                    System.out.println("---> THE FILE DOESN'T EXIST: " + file_path);
+//                    System.exit(0);
+//                }
+//            }
+//            catch (Exception e){
+//                e.printStackTrace();
+//            }
+
+        }
 
 
-        EOSS_GA algorithm = new EOSS_GA(design_space, num_evaluations, initial_pop_size, mutation_prob, run_number, return_queue_url);
-        algorithm.print_solutions();
 
-        algorithm.run();
-
-
-
-
-//        Design design = new Design(design_space);
-//        design.print();
 
 
 
@@ -56,4 +71,19 @@ public class App {
 
 
     }
+
+    public static String getSaltString(int length) {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < length) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+    }
+
+
+
 }

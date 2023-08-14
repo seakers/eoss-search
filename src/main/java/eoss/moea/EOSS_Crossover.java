@@ -35,7 +35,14 @@ public class EOSS_Crossover implements Variation {
         EOSS_Solution papa = (EOSS_Solution) parent1;
         EOSS_Solution mama = (EOSS_Solution) parent2;
 
-        Design child = new Design(papa.design, mama.design);
+        // TRUE CROSSOVER
+         Design child = new Design(papa.design, mama.design);
+
+        // PSUEDO RANDOM
+        // Design child = new Design(papa.design.design_space);
+
+        // BEST RANDOM - ACTUALLY WORST
+        // Design child = new Design(papa.design.design_space.get_random_design_from_space());
 
         if(this.getProbabilityResult(this.mutation_probability)){
             child.mutate();

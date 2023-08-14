@@ -1,5 +1,6 @@
 package eoss.moea;
 
+import eoss.model.Design;
 import eoss.model.DesignSpace;
 import org.moeaframework.algorithm.EpsilonMOEA;
 import org.moeaframework.core.*;
@@ -35,12 +36,24 @@ public class EOSS_GA implements Runnable{
         // CREATE PROBLEM
         this.problem = new EOSS_Problem(this.design_space, run_number, return_queue_url);
 
-        // INITIAL SOLUTIONS
+        // INITIAL SOLUTIONS - FROM ENUMERATED DESIGN SPACE
+//        for(int x = 0; x < initial_pop_size; x++){
+//            EOSS_Solution eoss_solution = new EOSS_Solution(this.design_space, this.design_space.get_random_design_from_space());
+//            eoss_solution.already_evaluated = false;
+//            this.solutions.add(eoss_solution);
+//        }
+
+        // INITIAL SOLUTIONS - RANDOM FORMULATION
         for(int x = 0; x < initial_pop_size; x++){
-            EOSS_Solution eoss_solution = new EOSS_Solution(this.design_space, this.design_space.get_random_design_from_space());
+            EOSS_Solution eoss_solution = new EOSS_Solution(this.design_space, new Design(this.design_space));
             eoss_solution.already_evaluated = false;
             this.solutions.add(eoss_solution);
         }
+
+
+
+
+
     }
 
     public void print_solutions(){
@@ -91,6 +104,8 @@ public class EOSS_GA implements Runnable{
         }
 
         ((EOSS_Problem) this.problem).write_designs();
+        // ((EOSS_Problem) this.problem).write_metrics();
+        // ((EOSS_Problem) this.problem).write_init_pop_metrics();
 
         pool.shutdown();
         System.out.println("--> FINISHED");

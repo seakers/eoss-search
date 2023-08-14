@@ -25,8 +25,8 @@ public class EOSS_Search  implements Callable<Algorithm> {
         this.accumulator = new Accumulator();
         this.analyzer = new Analyzer()
                 .withProblem(this.alg.getProblem())
-                .withIdealPoint(-1.1, -0.1)
-                .withReferencePoint(0, 10000)
+                .withIdealPoint(-1.1, -0.1, -0.1)
+                .withReferencePoint(0, 10000, 5000)
                 .includeHypervolume()
                 .includeAdditiveEpsilonIndicator();
         this.max_evaluations = max_evaluations;
@@ -96,7 +96,7 @@ public class EOSS_Search  implements Callable<Algorithm> {
 
 
     public void save_run(){
-        String save_dir = "/app/results/crossover/";
+        String save_dir = "/app/results/moea2/crossover/";
         String file_name = "run_"+this.run_number+".csv";
 
         try{
@@ -105,6 +105,7 @@ public class EOSS_Search  implements Callable<Algorithm> {
         }
         catch (Exception e){
             e.printStackTrace();
+            System.exit(0);
         }
     }
 
